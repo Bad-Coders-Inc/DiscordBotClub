@@ -20,43 +20,23 @@ guild = None
 
 @bot.event
 async def on_message(message):
-	await bot.process_commands(message)
+
 	if not rolesAssigned:
-		selected_roles = message.split(",")
+		selected_roles = message.content.split(",")
 		for a_role in selected_roles:
-			if 'python' in a_role.lower():
+			role_name = a_role.lower()
+			try:
 				user = message.author
-				role = discord.utils.get(guild.roles, name="python")
+				role = discord.utils.get(guild.roles, name=role_name)
 				await client.add_roles(user, role)
-			elif 'java' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="java")
-				await client.add_roles(user, role)
-			elif 'c' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="C")
-				await client.add_roles(user, role)
-			elif 'c++' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="C++")
-				await client.add_roles(user, role)
-			elif 'c#' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="C#")
-				await client.add_roles(user, role)
-			elif 'swift' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="swift")
-				await client.add_roles(user, role)
-			elif 'other' in a_role.lower():
-				user = message.author
-				role = discord.utils.get(guild.roles, name="other")
-				await client.add_roles(user, role)
-			else:
-				user = message.author
-				role = discord.utils.get(guild.roles, name="no experience")
-				await client.add_roles(user, role)
+			except:
+				await message.author.send(f"Could not find {a_role}")
 		rolesAssigned=True
+	else:
+		await bot.process_commands(message)
+
+
+
 
 
 

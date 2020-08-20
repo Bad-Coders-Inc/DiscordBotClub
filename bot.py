@@ -4,9 +4,8 @@ from dtoken import TOKEN
 
 from discord.ext import commands
 
-roles_assigned = True
 guild = None
-the_user = None
+users = []
 bot = commands.Bot(command_prefix='+', description="Codeucate's Customer Service Bot")
 @bot.event
 async def on_ready():
@@ -21,10 +20,14 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-	global roles_assigned
-	global the_user
+	global users
 	global guild
-	if not roles_assigned and the_user == message.author:
+	if message.author in users and "Direct Message" in str(message.channel):
+		print(message.channel)
+		for user in users:
+			if message.author == user:
+				the_user = user
+				break
 		selected_roles = message.content.replace(' ','').split(',')
 		for a_role in selected_roles:
 			role_name = a_role.title()
@@ -33,7 +36,8 @@ async def on_message(message):
 				await the_user.add_roles(role)
 			except:
 				await message.author.send(f"Could not find {a_role}")
-		roles_assigned=True
+		users.remove(the_user)
+		print(users)
 	else:
 		await bot.process_commands(message)
 
@@ -47,11 +51,9 @@ async def on_message(message):
 async def on_member_join(member):
 	global guild
 	guild = member.guild
-	global the_user
-	the_user  = member
+	global users
+	users.append(member)
 	await member.send("Hello! I am a bot here to help you, and I'll be there to answer any questions about our club that you might have!")
-	global roles_assigned
-	roles_assigned = False
 	prompt = '''
 	Which programming languages do you use?
 	-Python

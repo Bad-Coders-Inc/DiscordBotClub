@@ -94,7 +94,7 @@ async def add(ctx, member: discord.Member, project):
 
 
 @bot.command()
-async def list(ctx, what):
+async def list(ctx, what = ""):
 	with open('projects.json', 'r') as datafile:
 		data=json.load(datafile)
 		line=""
@@ -109,7 +109,7 @@ async def list(ctx, what):
 			line = line[:len(line)-2]
 			await ctx.send(line)
 		else:
-			await ctx.send("Please type in members or projects")
+			await ctx.send("Please type in >list projects or >list members.")
 
 @bot.command()
 async def create(ctx, name):

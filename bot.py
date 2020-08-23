@@ -82,6 +82,7 @@ async def hi(ctx):
 	await ctx.send("Hi!!")
 
 @bot.command()
+@commands.has_role("Admin")
 async def add(ctx, member: discord.Member, project):
 	global data
 	with open('projects.json', 'r') as datafile:
@@ -94,7 +95,21 @@ async def add(ctx, member: discord.Member, project):
 
 @bot.command()
 async def list(ctx, what):
-	pass
+	with open('projects.json', 'r') as datafile:
+		data=json.load(datafile)
+		line=""
+		if (what=="projects"):
+			for project in data["projects"].keys():
+				line+=str(project)+" "
+			await ctx.send(line)
+		elif (what=="members"):
+			for member in data["members"].values():
+				line+=str(member["name"]+" ")
+			await ctx.send(line)
+
+
+
+
 
 @bot.command()
 async def create(ctx, name):
@@ -116,7 +131,7 @@ async def createuser(ctx, Name, email):
 
 	with open('projects.json', 'w') as datafile:
 		json.dump(data, fp = datafile, indent = 4)
-		
+
 
 
 

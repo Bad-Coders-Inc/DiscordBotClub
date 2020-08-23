@@ -100,16 +100,16 @@ async def list(ctx, what):
 		line=""
 		if (what=="projects"):
 			for project in data["projects"].keys():
-				line+=str(project)+" "
+				line+=str(project)+", "
+			line = line[:len(line)-2]
 			await ctx.send(line)
 		elif (what=="members"):
 			for member in data["members"].values():
-				line+=str(member["name"]+" ")
+				line+=str(member["name"]+", ")
+			line = line[:len(line)-2]
 			await ctx.send(line)
-
-
-
-
+		else:
+			await ctx.send("Please type in members or projects")
 
 @bot.command()
 async def create(ctx, name):
@@ -118,7 +118,6 @@ async def create(ctx, name):
 @bot.command()
 async def edit(ctx, path, replacement):
 	pass
-
 
 @bot.command()
 async def createuser(ctx, Name, email):
@@ -131,9 +130,5 @@ async def createuser(ctx, Name, email):
 
 	with open('projects.json', 'w') as datafile:
 		json.dump(data, fp = datafile, indent = 4)
-
-
-
-
 
 bot.run(TOKEN)

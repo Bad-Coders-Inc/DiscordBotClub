@@ -94,14 +94,38 @@ async def add(ctx, member: discord.Member, project):
 
 
 @bot.command()
-async def list(ctx, what = ""):
+async def list(ctx, what, open_only='open'):
 	with open('projects.json', 'r') as datafile:
 		data=json.load(datafile)
 		line=""
 		if (what=="projects"):
 			for project in data["projects"].keys():
-				line+=str(project)+", "
-			line = line[:len(line)-2]
+				value = data["projects"][project]
+				status = value['status']
+				if open_only=="open":
+					if status=='open':
+						members = ""
+						for member in value["members"]:
+							members += member+", "
+						members = members[:len(members)-2]
+
+						formatted = str(project)+": "+value["link"]+"\n"+members+"\n\n"
+
+						line+=formatted
+				elif open_only=='all':
+					members = ""
+					for member in value["members"]:
+						members += member+", "
+					members = members[:len(members)-2]
+
+					formatted = str(project)+": "+value["link"]+"\n"+members+"\n\n"
+
+					line+=formatted
+
+			if line.strip()=="":
+				line = "no open projects currently"
+			else:
+				line = line[:len(line)-2]
 			await ctx.send(line)
 		elif (what=="members"):
 			for member in data["members"].values():
@@ -109,7 +133,7 @@ async def list(ctx, what = ""):
 			line = line[:len(line)-2]
 			await ctx.send(line)
 		else:
-			await ctx.send("Please type in >list projects or >list members.")
+			await ctx.send("Please type in members or project")
 
 @bot.command()
 async def create(ctx, name):
@@ -120,7 +144,7 @@ async def edit(ctx, path, replacement):
 	pass
 
 @bot.command()
-async def updateuser(ctx, Name, email):
+async def createuser(ctx, Name, email):
 	global data
 	names = Name.split('-')
 	name = names[0] + ' ' + names[1]

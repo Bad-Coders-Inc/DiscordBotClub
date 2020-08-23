@@ -4,9 +4,13 @@ from dtoken import TOKEN
 
 from discord.ext import commands
 
+import json
+
+data = {}
+
 guild = None
 users = []
-bot = commands.Bot(command_prefix='+', description="Codeucate's Customer Service Bot")
+bot = commands.Bot(command_prefix='>', description="Codeucate's Customer Service Bot")
 @bot.event
 async def on_ready():
 
@@ -53,9 +57,9 @@ async def on_member_join(member):
 	guild = member.guild
 	global users
 	users.append(member)
-	await member.send("Hello! I am a bot here to help you, and I'll be there to answer any questions about our club that you might have!")
+	await member.send("Welcome to the bad coders inc club! To get started, please answer the following prompt.")
 	prompt = '''
-	Which programming languages do you use?
+	What programming languages are you familiar with?
 	-Python
 	-Java
 	-C
@@ -78,12 +82,42 @@ async def hi(ctx):
 	await ctx.send("Hi!!")
 
 @bot.command()
-async def add(ctx, member, project):
-	pass
+async def add(ctx, member: discord.Member, project):
+	global data
+	with open('projects.json', 'r') as datafile:
+		try:
+			data = json.load(datafile)
+			data['projects'][project]['members'].append(data['members'][str(member.id)]['name'])
+		except:
+			await ctx.send("Could not find that member.")
+
 
 @bot.command()
 async def list(ctx, what):
 	pass
+
+@bot.command()
+async def create(ctx, name):
+	pass
+
+@bot.command()
+async def edit(ctx, path, replacement):
+	pass
+
+
+@bot.command()
+async def createuser(ctx, Name, email):
+	global data
+	names = Name.split('-')
+	name = names[0] + ' ' + names[1]
+	with open('projects.json', 'r') as datafile:
+		data = json.load(datafile)
+		data['members'][ctx.author.id] = {"name": name, "status": "Member", "email": email}
+
+	with open('projects.json', 'w') as datafile:
+		json.dump(data, fp = datafile, indent = 4)
+		
+
 
 
 

@@ -88,8 +88,12 @@ async def add(ctx, member: discord.Member, project):
 		try:
 			data = json.load(datafile)
 			data['projects'][project]['members'].append(data['members'][str(member.id)]['name'])
-		except:
-			await ctx.send("Could not find that member.")
+			await ctx.send('Added ' + member.mention + " in " + project)
+		except KeyError:
+			await ctx.send("Could not find that member or project.")
+
+	with open('projects.json', 'w') as datafile:
+		json.dump(data, fp = datafile, indent = 4)	
 
 
 @bot.command()
@@ -106,13 +110,13 @@ async def edit(ctx, path, replacement):
 
 
 @bot.command()
-async def createuser(ctx, Name, email):
+async def updateuser(ctx, Name, email):
 	global data
 	names = Name.split('-')
 	name = names[0] + ' ' + names[1]
 	with open('projects.json', 'r') as datafile:
 		data = json.load(datafile)
-		data['members'][ctx.author.id] = {"name": name, "status": "Member", "email": email}
+		data['members'][str(ctx.author.id)] = {"name": name, "status": "Member", "email": email}
 
 	with open('projects.json', 'w') as datafile:
 		json.dump(data, fp = datafile, indent = 4)

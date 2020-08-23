@@ -77,4 +77,14 @@ async def hello(ctx):
 async def hi(ctx):
 	await ctx.send("Hi!!")
 
+@bot.command()
+async def add(ctx, member, project):
+	pass
+
+@bot.command()
+async def list(ctx, what):
+	pass
+
+
+
 bot.run(TOKEN)

@@ -120,7 +120,7 @@ async def edit(ctx, path, replacement):
 	pass
 
 @bot.command()
-async def createuser(ctx, Name, email):
+async def updateuser(ctx, Name, email):
 	global data
 	names = Name.split('-')
 	name = names[0] + ' ' + names[1]

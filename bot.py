@@ -133,7 +133,7 @@ async def list(ctx, what, open_only='open'):
 			line = line[:len(line)-2]
 			await ctx.send(line)
 		else:
-			await ctx.send("Please type in members or project")
+			await ctx.send("Please type in members or projects :)")
 
 @bot.command()
 async def create(ctx, name):

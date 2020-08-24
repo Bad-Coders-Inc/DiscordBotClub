@@ -139,9 +139,7 @@ async def list(ctx, what, open_only='open'):
 async def create(ctx, name):
 	pass
 
-@bot.command()
-async def edit(ctx, path, replacement):
-	pass
+
 
 @bot.command()
 async def updateuser(ctx, Name, email):

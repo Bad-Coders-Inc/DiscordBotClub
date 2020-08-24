@@ -136,10 +136,12 @@ async def list(ctx, what, open_only='open'):
 			await ctx.send("Please type in members or projects :)")
 
 @bot.command()
-async def create(ctx, name):
+async def create(ctx, name, link):
 	pass
 
-
+@bot.command()
+async def project(ctx, name):
+	pass
 
 @bot.command()
 async def updateuser(ctx, Name, email):

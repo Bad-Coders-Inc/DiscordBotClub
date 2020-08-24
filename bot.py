@@ -45,11 +45,6 @@ async def on_message(message):
 		await bot.process_commands(message)
 
 
-
-
-
-
-
 @bot.event
 async def on_member_join(member):
 	global guild
@@ -66,6 +61,7 @@ async def on_member_join(member):
 
 
 @bot.command()
+<<<<<<< HEAD
 async def hello(ctx):
 	await ctx.send("Hi!!")
 
@@ -74,6 +70,8 @@ async def hi(ctx):
 	await ctx.send("Hi!!")
 
 @bot.command()
+=======
+>>>>>>> testingCategories
 @commands.has_role("bad coder")
 async def add(ctx, member: discord.Member, project):
 	global data
@@ -83,6 +81,20 @@ async def add(ctx, member: discord.Member, project):
 			data['projects'][project]['members'].append(data['members'][str(member.id)]['name'])
 		except:
 			await ctx.send("Could not find that member.")
+
+class Miscellaneous(commands.Cog):
+	def __init__(self, bot):
+		self.bot=bot
+
+	@commands.command()
+	async def hello(self, ctx):
+		await ctx.send("Hi!!")
+
+	@commands.command()
+	async def hi(self, ctx):
+		await ctx.send("Hi!!")
+
+bot.add_cog(Miscellaneous(bot))
 
 
 @bot.command()
@@ -126,6 +138,8 @@ async def list(ctx, what, open_only='open'):
 			await ctx.send(line)
 		else:
 			await ctx.send("Please type in members or projects :)")
+
+
 
 @bot.command()
 async def create(ctx, name, link):

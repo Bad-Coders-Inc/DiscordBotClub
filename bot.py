@@ -10,7 +10,7 @@ data = {}
 
 guild = None
 users = []
-bot = commands.Bot(command_prefix='*', description="Welcome to Bad Coder's Inc Club!")
+bot = commands.Bot(command_prefix='*', description="Welcome to Bad Coders Inc Club!")
 @bot.event
 async def on_ready():
 
@@ -40,7 +40,13 @@ async def on_message(message):
 			except:
 				await message.author.send(f"Could not find {a_role}")
 		users.remove(the_user)
-		await message.channel.send("Please type in *updateuser **firstname-lastname email**")
+		prompt = '''
+		Please type in *updateuser **firstname-lastname email**
+You can always rerun the same command if you spelled something wrong
+
+Ex: *updateuser Jane-Doe janedoe36@gmail.com
+		'''
+		await message.channel.send(prompt)
 	else:
 		await bot.process_commands(message)
 
@@ -51,11 +57,11 @@ async def on_member_join(member):
 	guild = member.guild
 	global users
 	users.append(member)
-	await member.send("Welcome to the bad coders inc club! To get started, please answer the following prompt.")
+	await member.send("Welcome to the bad coders inc club! To get started, please answer/do the follwoing prompts.")
 	prompt = '''
 	What programming languages are you familiar with?
 
-	(Please seperate your choices by commas only):
+(Please seperate your choices by commas only):
 	'''
 	await member.send(prompt)
 
@@ -172,6 +178,7 @@ class General(commands.Cog):
 
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
+			await ctx.send('User updated.')
 
 bot.add_cog(General(bot))
 

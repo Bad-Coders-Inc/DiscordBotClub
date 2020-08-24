@@ -137,7 +137,17 @@ async def list(ctx, what, open_only='open'):
 
 @bot.command()
 async def create(ctx, name, link):
-	pass
+	new={
+	name: {
+	"members" :[],
+	"link":link,
+	"status": "open"
+	}
+	}
+	with open('projects.json','r') as datafile:
+		data=json.load(datafile)
+		data["projects"].update(new)
+		datafile.close()
 
 @bot.command()
 async def project(ctx, name):

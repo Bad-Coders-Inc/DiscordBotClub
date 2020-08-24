@@ -71,9 +71,19 @@ async def add(ctx, member: discord.Member, project):
 		except:
 			await ctx.send("Could not find that member.")
 
-@bot.command()
-async def hello(ctx):
-	await ctx.send("Hello World")
+class Miscellaneous(commands.Cog):
+	def __init__(self, bot):
+		self.bot=bot
+
+	@commands.command()
+	async def hello(self, ctx):
+		await ctx.send("Hi!!")
+
+	@commands.command()
+	async def hi(self, ctx):
+		await ctx.send("Hi!!")
+
+bot.add_cog(Miscellaneous(bot))
 
 
 @bot.command()

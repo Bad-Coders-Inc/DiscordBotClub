@@ -91,7 +91,7 @@ class Project_Leaders(commands.Cog):
 		self.bot=bot
 
 	@commands.command()
-	@commands.has_role("bad coder")
+	@commands.has_role("project leader")
 	async def create(self, ctx, name=None, link=None):
 		if name==None or link==None:
 			await ctx.send('Please use the following format: *create <name of project> <github link>')
@@ -106,9 +106,10 @@ class Project_Leaders(commands.Cog):
 			data["projects"][name] = new
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
+		await ctx.send('Project created.')
 
 	@commands.command()
-	@commands.has_role("bad coder")
+	@commands.has_role("project leader")
 	async def add(self, ctx, member: discord.Member, project=None):
 		if project==None:
 			await ctx.send("Please specify the project you want to add the member to")
@@ -120,6 +121,10 @@ class Project_Leaders(commands.Cog):
 				data['projects'][project]['members'].append(data['members'][str(member.id)]['name'])
 			except:
 				await ctx.send("Could not find that member.")
+
+		with open('projects.json', 'w') as datafile:
+			json.dump(data, fp = datafile, indent = 4)
+			await ctx.send('Member added')
 
 bot.add_cog(Project_Leaders(bot))
 

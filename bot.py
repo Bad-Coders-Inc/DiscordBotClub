@@ -92,7 +92,10 @@ class Project_Leaders(commands.Cog):
 
 	@commands.command()
 	@commands.has_role("bad coder")
-	async def create(self, ctx, name, link):
+	async def create(self, ctx, name=None, link=None):
+		if name==None or link==None:
+			await ctx.send('Please use the following format: *create <name of project> <github link>')
+			return None
 		with open('projects.json','r') as datafile:
 			data=json.load(datafile)
 			new={
@@ -106,7 +109,10 @@ class Project_Leaders(commands.Cog):
 
 	@commands.command()
 	@commands.has_role("bad coder")
-	async def add(self, ctx, member: discord.Member, project):
+	async def add(self, ctx, member: discord.Member, project=None):
+		if project==None:
+			await ctx.send("Please specify the project you want to add the member to")
+			return None
 		global data
 		with open('projects.json', 'r') as datafile:
 			try:
@@ -122,7 +128,10 @@ class General(commands.Cog):
 		self.bot=bot
 
 	@commands.command()
-	async def list(self, ctx, what, open_only='open'):
+	async def list(self, ctx, what=None, open_only='open'):
+		if what==None:
+			await ctx.send('Please specify whether you want to list projects or members')
+			return None
 		with open('projects.json', 'r') as datafile:
 			data=json.load(datafile)
 			line=""
@@ -168,7 +177,10 @@ class General(commands.Cog):
 		pass
 
 	@commands.command()
-	async def updateuser(self, ctx, Name, email):
+	async def updateuser(self, ctx, Name=None, email=None):
+		if Name==None or email==None:
+			await ctx.send('Please follow this format: *updateuser **firstname-lastname email** \nEx: *updateuser Jane-Doe janedoe36@gmail.com')
+			return None
 		global data
 		names = Name.split('-')
 		name = names[0] + ' ' + names[1]

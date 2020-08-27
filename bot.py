@@ -97,9 +97,12 @@ class Project_Leaders(commands.Cog):
 			await ctx.send('Please use the following format: *create <name of project> <github link>')
 			return None
 		with open('projects.json','r') as datafile:
+			global data
 			data=json.load(datafile)
+			if str(ctx.author.id) not in data['members'].keys():
+				await ctx.send('You are not in the database. Please use updateuser')
 			new={
-			"members" :[data['members'][str(ctx.author.id)]["name"]],
+			"members" :{str(ctx.author.id): 'Leader'},
 			"link":link,
 			"status": "open"
 			}
@@ -114,17 +117,32 @@ class Project_Leaders(commands.Cog):
 		if project==None:
 			await ctx.send("Please specify the project you want to add the member to")
 			return None
-		global data
 		with open('projects.json', 'r') as datafile:
 			try:
+				global data
 				data = json.load(datafile)
-				data['projects'][project]['members'].append(data['members'][str(member.id)]['name'])
-			except:
-				await ctx.send("Could not find that member.")
+				dic = data['members'][str(member.id)]
+				if data['projects'][project]['members'][str(member.id)] != None:
+					await ctx.send('This user is already on this project.')
+					return None
+				data['projects'][project]['members'][str(member.id)] = 'Member'
+			except KeyError:
+				await ctx.send("This member is not in the database. Please tell him/her to use updateuser.")
+				return None
 
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
 			await ctx.send('Member added')
+
+	@commands.command()
+	@commands.has_role("project leader")
+	async def ping(self, ctx):
+		pass
+
+	@commands.command()
+	@commands.has_role("project leader")
+	async def close(self, ctx):
+		pass
 
 bot.add_cog(Project_Leaders(bot))
 
@@ -147,8 +165,8 @@ class General(commands.Cog):
 					if open_only=="open":
 						if status=='open':
 							members = ""
-							for member in value["members"]:
-								members += member+", "
+							for memberid in value["members"].keys():
+								members += data['members'][memberid]['name']+", "
 							members = members[:len(members)-2]
 
 							formatted = str(project)+": "+value["link"]+"\n"+members+"\n\n"
@@ -188,14 +206,17 @@ class General(commands.Cog):
 			return None
 		global data
 		names = Name.split('-')
-		name = names[0] + ' ' + names[1]
+		name = ''
+		for part in names:
+			name+= part + ' '
+		name = name.strip()
 		with open('projects.json', 'r') as datafile:
 			data = json.load(datafile)
 			data['members'][str(ctx.author.id)] = {"name": name, "status": "Member", "email": email}
 
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
-			await ctx.send('User updated.')
+			await ctx.send('User ' + str(ctx.author) + ' updated.')
 
 bot.add_cog(General(bot))
 

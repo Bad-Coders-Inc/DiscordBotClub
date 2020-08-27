@@ -141,8 +141,17 @@ class Project_Leaders(commands.Cog):
 
 	@commands.command()
 	@commands.has_role("project leader")
-	async def close(self, ctx):
-		pass
+	async def close(self, ctx, project=None):
+		if project==None:
+			await ctx.send("Please specify the project you want to close")
+			return None
+		with open('projects.json', 'r') as datafile:
+			datafile['projects'][project]['status'] = 'close'
+		with open('projects.json', 'w') as datafile:
+			json.dump(data, fp = datafile, indent = 4)
+		await ctx.send('Project created.')
+
+
 
 bot.add_cog(Project_Leaders(bot))
 

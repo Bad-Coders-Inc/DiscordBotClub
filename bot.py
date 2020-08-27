@@ -6,6 +6,10 @@ from discord.ext import commands
 
 import json
 
+from discord import Colour
+
+import random
+
 data = {}
 
 guild = None
@@ -109,6 +113,13 @@ class Project_Leaders(commands.Cog):
 			data["projects"][name] = new
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
+
+		random_number = random. randint(0,16777215)
+		hex_number = int(hex(random_number), base = 16)
+		color = Colour(hex_number)
+		await ctx.guild.create_role(name = name,color = color, mentionable = True)
+		role = discord.utils.get(ctx.guild.roles, name=name)
+		await ctx.author.add_roles(role)
 		await ctx.send('Project created.')
 
 	@commands.command()
@@ -122,9 +133,12 @@ class Project_Leaders(commands.Cog):
 				global data
 				data = json.load(datafile)
 				dic = data['members'][str(member.id)]
-				if data['projects'][project]['members'][str(member.id)] != None:
-					await ctx.send('This user is already on this project.')
-					return None
+				try:
+					if data['projects'][project]['members'][str(member.id)] != None:
+						await ctx.send('This user is already on this project.')
+						return None
+				except KeyError:
+					pass
 				data['projects'][project]['members'][str(member.id)] = 'Member'
 			except KeyError:
 				await ctx.send("This member is not in the database. Please tell him/her to use updateuser.")
@@ -134,10 +148,9 @@ class Project_Leaders(commands.Cog):
 			json.dump(data, fp = datafile, indent = 4)
 			await ctx.send('Member added')
 
-	@commands.command()
-	@commands.has_role("project leader")
-	async def ping(self, ctx):
-		pass
+		role = discord.utils.get(ctx.guild.roles, name=project)
+		await member.add_roles(role)
+
 
 	@commands.command()
 	@commands.has_role("project leader")
@@ -146,10 +159,14 @@ class Project_Leaders(commands.Cog):
 			await ctx.send("Please specify the project you want to close")
 			return None
 		with open('projects.json', 'r') as datafile:
-			datafile['projects'][project]['status'] = 'close'
+			global data
+			data = json.load(datafile)
+			data['projects'][project]['status'] = 'closed'
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
-		await ctx.send('Project created.')
+		await ctx.send('Project closed.')
+		role = discord.utils.get(ctx.guild.roles, name=project)
+		await role.delete()
 
 
 

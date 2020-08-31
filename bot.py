@@ -200,13 +200,16 @@ class General(commands.Cog):
 							line+=formatted
 					elif open_only=='all':
 						members = ""
-						for member in value["members"]:
-							members += member+", "
+						for memberid in value["members"].keys():
+							members += data['members'][memberid]['name']+", "
 						members = members[:len(members)-2]
 
 						formatted = str(project)+": "+value["link"]+"\n"+members+"\n\n"
 
 						line+=formatted
+					else:
+						await ctx.send('Please type in all or open after *list projects')
+						return None
 
 				if line.strip()=="":
 					line = "no open projects currently"
@@ -220,6 +223,7 @@ class General(commands.Cog):
 				await ctx.send(line)
 			else:
 				await ctx.send("Please type in members or projects :)")
+				return None
 
 	@commands.command()
 	async def project(self, ctx, name):
@@ -243,6 +247,8 @@ class General(commands.Cog):
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp = datafile, indent = 4)
 			await ctx.send('User ' + str(ctx.author) + ' updated.')
+
+		await ctx.author.edit(nick = name)
 
 bot.add_cog(General(bot))
 

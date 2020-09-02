@@ -72,17 +72,16 @@ async def on_member_join(member):
 
 
 
-
 class Miscellaneous(commands.Cog):
 	def __init__(self, bot):
 		self.bot=bot
 
 	@commands.command()
-	async def hello(self, ctx):
-		await ctx.send("Hi!!")
+	async def Hello(self, ctx):
+		await ctx.send("Hi!! Welcome to Bad Coders Inc!")
 
 	@commands.command()
-	async def hi(self, ctx):
+	async def Hi(self, ctx):
 		await ctx.send("Hi!!")
 
 bot.add_cog(Miscellaneous(bot))
@@ -151,6 +150,22 @@ class Project_Leaders(commands.Cog):
 		role = discord.utils.get(ctx.guild.roles, name=project)
 		await member.add_roles(role)
 
+	@commands.command()
+	@commands.has_role("project leader")
+	async def open(self, ctx, project=None):
+		if project==None:
+			await ctx.send("Please specify the project you want to open")
+			return None
+		with open('projects.json', 'r') as datafile:
+			global data
+			data = json.load(datafile)
+			data['projects'][project]['status'] = 'open'
+
+		with open('projects.json', 'w') as datafile:
+			json.dump(data, fp=datafile, indent=4)
+		await ctx.send('Project opened.')
+		role = discord.utils.get(ctx.guild.roles, name=project)
+		await ctx.author.add_roles(role)
 
 	@commands.command()
 	@commands.has_role("project leader")

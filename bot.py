@@ -166,7 +166,7 @@ class Project_Leaders(commands.Cog):
 		color = Colour(hex_number)
 		await ctx.guild.create_role(name = project,color = color, mentionable = True)
 		role = discord.utils.get(ctx.guild.roles, name=project)
-		members = ctx.authors.guild.members
+		members = ctx.author.guild.members
 		for id in data['projects'][project]['members'].keys():
 			if id in members:
 				for member in members:

@@ -159,13 +159,18 @@ class Project_Leaders(commands.Cog):
 		with open('projects.json', 'r') as datafile:
 			global data
 			data = json.load(datafile)
-			data['projects'][project]['status'] = 'open'
-
+			
+		data['projects'][project]['status'] = 'open'
+		role = discord.utils.get(ctx.guild.roles, name=project)
+		members = ctx.authors.guild.members
+		for id in data['projects'][project]['members'].keys():
+			if id in members:
+				for member in members:
+					if str(member.id) == id:	
+						member.add_roles(role)		
 		with open('projects.json', 'w') as datafile:
 			json.dump(data, fp=datafile, indent=4)
 		await ctx.send('Project opened.')
-		role = discord.utils.get(ctx.guild.roles, name=project)
-		await ctx.author.add_roles(role)
 
 	@commands.command()
 	@commands.has_role("project leader")

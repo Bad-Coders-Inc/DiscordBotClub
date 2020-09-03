@@ -161,6 +161,10 @@ class Project_Leaders(commands.Cog):
 			data = json.load(datafile)
 			
 		data['projects'][project]['status'] = 'open'
+		random_number = random. randint(0,16777215)
+		hex_number = int(hex(random_number), base = 16)
+		color = Colour(hex_number)
+		await ctx.guild.create_role(name = project,color = color, mentionable = True)
 		role = discord.utils.get(ctx.guild.roles, name=project)
 		members = ctx.authors.guild.members
 		for id in data['projects'][project]['members'].keys():

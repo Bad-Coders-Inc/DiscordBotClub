@@ -192,6 +192,17 @@ class Project_Leaders(commands.Cog):
 		role = discord.utils.get(ctx.guild.roles, name=project)
 		await role.delete()
 
+	@commands.command()
+	@commands.has_role("project leader")
+	async def updatenicknames(self, ctx):
+		with open('projects.json', 'r') as f:
+			data = json.load(f)
+
+		for member in ctx.guild.members:
+			try:
+				await member.edit(nick = data['members'][member.id]['name'])
+			except:
+				pass
 
 
 bot.add_cog(Project_Leaders(bot))

@@ -200,8 +200,8 @@ class Project_Leaders(commands.Cog):
 
 		for member in ctx.guild.members:
 			try:
-				await member.edit(nick = data['members'][member.id]['name'])
-			except KeyError:
+				await member.edit(nick = data['members'][str(member.id)]['name'])
+			except:
 				pass
 		await ctx.send('Names updated')
 

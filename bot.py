@@ -201,9 +201,9 @@ class Project_Leaders(commands.Cog):
 		for member in ctx.guild.members:
 			try:
 				await member.edit(nick = data['members'][member.id]['name'])
-			except:
+			except KeyError:
 				pass
-
+		await ctx.send('Names updated')
 
 bot.add_cog(Project_Leaders(bot))
 
